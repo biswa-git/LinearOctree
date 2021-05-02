@@ -4,7 +4,25 @@
 #include<set>
 #include<iostream>
 #include<AABBTree.hpp>
+#include<IntersectionTool.hpp>
 #include<chrono>
+
+
+void printbbox(std::ofstream& file, AABB& bbox)
+{
+    auto min = bbox.GetMin();
+    auto max = bbox.GetMax();
+
+    file << min[0] << " " << min[1] << " " << min[2] << "\n";
+    file << max[0] << " " << min[1] << " " << min[2] << "\n";
+    file << max[0] << " " << max[1] << " " << min[2] << "\n";
+    file << min[0] << " " << max[1] << " " << min[2] << "\n";
+    file << min[0] << " " << min[1] << " " << max[2] << "\n";
+    file << max[0] << " " << min[1] << " " << max[2] << "\n";
+    file << max[0] << " " << max[1] << " " << max[2] << "\n";
+    file << min[0] << " " << max[1] << " " << max[2] << "\n";
+}
+
 int main()
 {
     auto v = NULL_VECTOR;
@@ -21,10 +39,12 @@ int main()
     std::cout << ans << "\n";
     */
 
+    std::string file_location = "C:/Users/MegaMind/Downloads/model/";
+    std::string file_name = "CERF_Free_Triangulate.stl";
 
     Geometry geometry;
-    geometry.Read("C:/Users/bghosh/Downloads/bugatti.stl");
-    geometry.Write("C:/Users/bugatti/Downloads", "bugatti");
+    geometry.Read(file_location + file_name);
+    geometry.Write("E:/LinearOctree/output", "CERF_Free_Triangulate");
 
     /*
     std::ofstream myfile;
@@ -48,19 +68,89 @@ int main()
     std::cout << "end\n";
 
 
-    AABB bbox = geometry.GetFaceList().at(86023)->GetAABB();
-    double e = 0.03;
+    AABB bbox = geometry.GetFaceList().at(5)->GetAABB();
+    double e = 0.3, a=0.0;
     bbox.Assign(
-        Vector(1.2917913198471069 - e, 1.5888619422912598 - e, -0.34591406583786011 - e), 
-        Vector(1.2962168455123901 + e, 1.5888659954071045 + e, -0.34394556283950806 + e)
+        Vector(a + 15.103 - e, a + 57.819 - e, a + 75.024 - e),
+        Vector(a + 15.103 + e, a + 57.819 + e, a + 75.024 + e)
     );
 
-
     start = clock.now();
-    for (int i = 0; i < 1000; ++i)
-    {
+    //for (int i = 0; i < 1000; ++i)
+    //{
         auto result = tree.GetFaces(bbox);
-    }
+        std::vector<bool> res;
+        for (size_t i = 0; i < result.size(); i++)
+        {
+            res.emplace_back(IntersectionTool::IsIntersect(bbox, result[i]));
+        }
+
+
+        result = geometry.GetFaceList();
+        std::ofstream myfile;
+        auto file = file_location + "/" + "temp_" + ".dat";
+        myfile.open(file);
+        myfile << "TITLE = \"title\"\n";
+        myfile << "VARIABLES = \"X\", \"Y\", \"Z\"\n";
+        myfile << "ZONE T = \"triangle\", N = " << result.size()*3 << ", E = " << result.size() << ", DATAPACKING=POINT, ZONETYPE=FETRIANGLE\n";
+
+        for (auto it = result.begin(); it != result.end(); it++)
+        {
+            auto he = (*it)->GetHalfEdge();
+            for (auto i = 0; i < 3; ++i)
+            {
+                auto coord = he[i]->GetStart()->GetPositionVector();
+                myfile << coord.GetDx() << " " << coord.GetDy() << " " << coord.GetDz() << "\n";
+            }
+        }
+
+        auto ids = 0;
+        for (auto it = result.begin(); it != result.end(); it++)
+        {
+            myfile << ids+1 << " " << ids+2 << " " << ids+3 << "\n";
+            ids += 3;
+        }
+
+        myfile << "ZONE T = \"bbox\", N = " << (result.size() + 1) * 8 << ", E = " << 6*(result.size() + 1)<< ", DATAPACKING=POINT, ZONETYPE=FEQUADRILATERAL\n";
+        for (auto it = result.begin(); it != result.end(); it++)
+        {
+            printbbox(myfile, (*it)->GetAABB());
+        }
+        printbbox(myfile, bbox);
+        ids = 0;
+        for (auto it = result.begin(); it != result.end(); it++)
+        {
+            myfile << ids + 1 << " " << ids + 2 << " " << ids + 3 << " " << ids + 4 << "\n";
+            myfile << ids + 5 << " " << ids + 6 << " " << ids + 7 << " " << ids + 8 << "\n";
+            myfile << ids + 4 << " " << ids + 1 << " " << ids + 5 << " " << ids + 8 << "\n";
+            myfile << ids + 1 << " " << ids + 2 << " " << ids + 6 << " " << ids + 5 << "\n";
+            myfile << ids + 3 << " " << ids + 2 << " " << ids + 6 << " " << ids + 7 << "\n";
+            myfile << ids + 4 << " " << ids + 3 << " " << ids + 7 << " " << ids + 8 << "\n";
+
+            ids += 8;
+        }
+
+        myfile << ids + 1 << " " << ids + 2 << " " << ids + 3 << " " << ids + 4 << "\n";
+        myfile << ids + 5 << " " << ids + 6 << " " << ids + 7 << " " << ids + 8 << "\n";
+        myfile << ids + 4 << " " << ids + 1 << " " << ids + 5 << " " << ids + 8 << "\n";
+        myfile << ids + 1 << " " << ids + 2 << " " << ids + 6 << " " << ids + 5 << "\n";
+        myfile << ids + 3 << " " << ids + 2 << " " << ids + 6 << " " << ids + 7 << "\n";
+        myfile << ids + 4 << " " << ids + 3 << " " << ids + 7 << " " << ids + 8 << "\n"; 
+        
+        
+        myfile.close();
+
+
+
+
+
+
+
+
+
+
+
+    //}
     end = clock.now();
     std::cout << "time taken tree: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
     //auto res_bbox = AABB::GetAABB(result);
@@ -68,8 +158,8 @@ int main()
     auto& faces = geometry.GetFaceList();
 
     start = clock.now();
-    for (int i = 0; i < 1000; ++i) 
-    {
+    //for (int i = 0; i < 1000; ++i) 
+    //{
         std::vector<Face*> fl;
         for (size_t i = 0; i < faces.size(); i++)
         {
@@ -79,7 +169,7 @@ int main()
                 fl.emplace_back(face);
             }
         }
-    }
+    //}
 
     end = clock.now();
     std::cout << "time taken loop: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;

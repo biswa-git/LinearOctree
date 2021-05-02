@@ -15,9 +15,12 @@ public:
     Vector GetMin() const;
     Vector GetMax() const;
 
+    std::vector<Vector> GetVertices();
+
     static bool IsIntersect(const AABB&, const AABB&);
     static AABB GetAABB(const std::vector<Face*>&);
     static AABB Union(const AABB&, const AABB&);
+
 private:
     Vector m_min;
     Vector m_max;

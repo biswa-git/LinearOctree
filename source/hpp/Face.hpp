@@ -17,6 +17,7 @@ public:
     virtual Vector GetNormalVector() = 0;
     virtual void SetOrphanedEdgeRemoveFlag(bool);
     virtual std::vector<HalfEdge*>& GetHalfEdge() = 0;
+    virtual std::vector<Vertex*> GetVertices() = 0;
     virtual AABB GetAABB() = 0;
 
 protected:
@@ -32,16 +33,19 @@ protected:
 class TriFace :public Face
 {
 public:
-    static TriFace* New(Vertex*, Vertex*, Vertex*, const size_t&);
+    static TriFace* New(Vertex*, Vertex*, Vertex*, const Vector& normal, const size_t&);
     ~TriFace();
     virtual double GetArea();
     virtual Vector GetCentroid();
     virtual Vector GetNormalVector();
     virtual std::vector<HalfEdge*>& GetHalfEdge();
+    virtual std::vector<Vertex*> GetVertices();
     virtual AABB GetAABB();
+
 protected:
     virtual void CalculateArea();
     virtual void CalculateCentroid();
+
 private:
-    TriFace(Vertex*, Vertex*, Vertex*, const size_t&);
+    TriFace(Vertex*, Vertex*, Vertex*, const Vector& normal,const size_t&);
 };

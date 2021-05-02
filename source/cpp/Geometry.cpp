@@ -50,13 +50,15 @@ GeometryResult Geometry::Read(const std::string& file_name)
             for (size_t i = 0; i < mesh.num_tris(); i++)
             {
                 auto t = mesh.tri_corner_inds(i);
+                auto n = mesh.tri_normal(i);
+                Vector normal(n[0], n[1], n[2]);
                 ++faceNum;
-                auto new_face = TriFace::New(m_vertex_list[t[0]], m_vertex_list[t[1]], m_vertex_list[t[2]], faceNum);
+                auto new_face = TriFace::New(m_vertex_list[t[0]], m_vertex_list[t[1]], m_vertex_list[t[2]], normal, faceNum);
                 m_face_list.push_back(new_face);
             }
 
             //CALCULATING AABB
-            CalculateBoundingBox();
+            //CalculateBoundingBox();
 
             result.success = true;
         }
@@ -110,7 +112,7 @@ GeometryResult Geometry::Write(const std::string& file_location, const std::stri
 
     for (auto it = m_face_list.begin(); it != m_face_list.end(); it++)
     {
-        myfile << (*it)->GetHalfEdge()[0]->GetEnd()->GetId() << " " << (*it)->GetHalfEdge()[1]->GetEnd()->GetId() << " " << (*it)->GetHalfEdge()[2]->GetEnd()->GetId() << "\n";
+        myfile << (*it)->GetHalfEdge()[0]->GetStart()->GetId() << " " << (*it)->GetHalfEdge()[1]->GetStart()->GetId() << " " << (*it)->GetHalfEdge()[2]->GetStart()->GetId() << "\n";
     }
     
     myfile.close();

@@ -15,9 +15,9 @@ void Face::SetOrphanedEdgeRemoveFlag(bool status)
 	m_is_orphaned_edge_remove_flag = status;
 }
 
-TriFace* TriFace::New(Vertex* a, Vertex* b, Vertex* c, const size_t& id)
+TriFace* TriFace::New(Vertex* a, Vertex* b, Vertex* c, const Vector& normal, const size_t& id)
 {
-	return new TriFace(a, b, c, id);
+	return new TriFace(a, b, c, normal, id);
 }
 
 TriFace::~TriFace()
@@ -51,7 +51,7 @@ Vector TriFace::GetNormalVector()
 	return (half_edge[0]->GetEdgeVector() ^ half_edge[1]->GetEdgeVector()).Unit();
 }
 
-TriFace::TriFace(Vertex* a, Vertex* b, Vertex* c, const size_t& id = 0)
+TriFace::TriFace(Vertex* a, Vertex* b, Vertex* c, const Vector& normal, const size_t& id = 0)
 {
 	m_id = id;
 	m_half_edge.resize(3, nullptr);
@@ -81,7 +81,7 @@ TriFace::TriFace(Vertex* a, Vertex* b, Vertex* c, const size_t& id = 0)
 	{
 		Vector directionVec(Edge::DistanceVector(triEdge[i]->GetHalfEdge(0)->GetEnd(), tempVertexArray[(i+2)%3]));
 
-		if ((triEdge[i]->GetHalfEdge(0)->GetEdgeVector() ^ directionVec).Abs() > 0.0)
+		if ((triEdge[i]->GetHalfEdge(0)->GetEdgeVector() ^ directionVec)*normal > 0.0)
 		{
 			m_half_edge[i] = triEdge[i]->GetHalfEdge(0);
 		}
@@ -134,6 +134,16 @@ void TriFace::CalculateCentroid()
 std::vector<HalfEdge*>& TriFace::GetHalfEdge()
 {
 	return m_half_edge;
+}
+
+std::vector<Vertex*> TriFace::GetVertices()
+{
+	std::vector<Vertex*> result;
+	for (auto it = m_half_edge.begin(); it != m_half_edge.end(); it++)
+	{
+		result.emplace_back((*it)->GetStart());
+	}
+	return result;
 }
 
 AABB TriFace::GetAABB()

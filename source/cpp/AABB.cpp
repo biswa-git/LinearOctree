@@ -31,6 +31,25 @@ Vector AABB::GetMax() const
     return m_max;
 }
 
+std::vector<Vector> AABB::GetVertices()
+{
+    std::vector<Vector> result;
+
+    auto& min = this->GetMin();
+    auto& max = this->GetMax();
+
+    result.emplace_back(Vector(min[0], min[1], min[2]));
+    result.emplace_back(Vector(min[0], min[1], max[2]));
+    result.emplace_back(Vector(min[0], max[1], min[2]));
+    result.emplace_back(Vector(min[0], max[1], max[2]));
+    result.emplace_back(Vector(max[0], min[1], min[2]));
+    result.emplace_back(Vector(max[0], min[1], max[2]));
+    result.emplace_back(Vector(max[0], max[1], min[2]));
+    result.emplace_back(Vector(max[0], max[1], max[2]));
+
+    return result;
+}
+
 bool AABB::IsIntersect(const AABB& bb_first, const AABB& bb_second)
 {
     return (bb_first.m_min.GetDx() <= bb_second.m_max.GetDx() && bb_first.m_max.GetDx() >= bb_second.m_min.GetDx()) &&

@@ -20,6 +20,7 @@ public:
     void SetDx(const double&);
     void SetDy(const double&);
     void SetDz(const double&);
+    double Vector::operator [](const int&);
 
     double GetDx() const;
     double GetDy() const;
@@ -30,7 +31,7 @@ public:
     void Print() const;
 
 private:
-    double m_dx, m_dy, m_dz;
+    double m_c[3];
 };
 
 static Vector NULL_VECTOR(0, 0, 0);
