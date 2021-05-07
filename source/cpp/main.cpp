@@ -80,13 +80,14 @@ int main()
     //{
         auto result = tree.GetFaces(bbox);
         std::vector<bool> res;
+        std::vector<Face*> res_temp;
+        res_temp.emplace_back(result[1]);
+        result = res_temp;
         for (size_t i = 0; i < result.size(); i++)
         {
             res.emplace_back(IntersectionTool::IsIntersect(bbox, result[i]));
         }
 
-
-        result = geometry.GetFaceList();
         std::ofstream myfile;
         auto file = file_location + "/" + "temp_" + ".dat";
         myfile.open(file);
@@ -112,13 +113,13 @@ int main()
         }
 
         myfile << "ZONE T = \"bbox\", N = " << (result.size() + 1) * 8 << ", E = " << 6*(result.size() + 1)<< ", DATAPACKING=POINT, ZONETYPE=FEQUADRILATERAL\n";
-        for (auto it = result.begin(); it != result.end(); it++)
+        for (auto it : result)
         {
-            printbbox(myfile, (*it)->GetAABB());
+            printbbox(myfile, it->GetAABB());
         }
         printbbox(myfile, bbox);
         ids = 0;
-        for (auto it = result.begin(); it != result.end(); it++)
+        for (auto it : result)
         {
             myfile << ids + 1 << " " << ids + 2 << " " << ids + 3 << " " << ids + 4 << "\n";
             myfile << ids + 5 << " " << ids + 6 << " " << ids + 7 << " " << ids + 8 << "\n";

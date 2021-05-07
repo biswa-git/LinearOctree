@@ -17,7 +17,7 @@ public:
     virtual Vector GetNormalVector() = 0;
     virtual void SetOrphanedEdgeRemoveFlag(bool);
     virtual std::vector<HalfEdge*>& GetHalfEdge() = 0;
-    virtual std::vector<Vertex*> GetVertices() = 0;
+    virtual std::vector<Vector> GetVerticesVector() = 0;
     virtual AABB GetAABB() = 0;
 
 protected:
@@ -39,7 +39,7 @@ public:
     virtual Vector GetCentroid();
     virtual Vector GetNormalVector();
     virtual std::vector<HalfEdge*>& GetHalfEdge();
-    virtual std::vector<Vertex*> GetVertices();
+    virtual std::vector<Vector> GetVerticesVector();
     virtual AABB GetAABB();
 
 protected:

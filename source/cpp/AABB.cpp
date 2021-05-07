@@ -31,7 +31,7 @@ Vector AABB::GetMax() const
     return m_max;
 }
 
-std::vector<Vector> AABB::GetVertices()
+std::vector<Vector> AABB::GetVerticesVector()
 {
     std::vector<Vector> result;
 

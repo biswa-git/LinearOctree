@@ -136,12 +136,12 @@ std::vector<HalfEdge*>& TriFace::GetHalfEdge()
 	return m_half_edge;
 }
 
-std::vector<Vertex*> TriFace::GetVertices()
+std::vector<Vector> TriFace::GetVerticesVector()
 {
-	std::vector<Vertex*> result;
+	std::vector<Vector> result;
 	for (auto it = m_half_edge.begin(); it != m_half_edge.end(); it++)
 	{
-		result.emplace_back((*it)->GetStart());
+		result.emplace_back((*it)->GetStart()->GetPositionVector());
 	}
 	return result;
 }
