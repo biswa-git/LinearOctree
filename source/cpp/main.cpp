@@ -69,7 +69,7 @@ int main()
 
 
     AABB bbox = geometry.GetFaceList().at(5)->GetAABB();
-    double e = 0.3, a=0.0;
+    double e = 20, a=1.0;
     bbox.Assign(
         Vector(a + 15.103 - e, a + 57.819 - e, a + 75.024 - e),
         Vector(a + 15.103 + e, a + 57.819 + e, a + 75.024 + e)
@@ -80,9 +80,6 @@ int main()
     //{
         auto result = tree.GetFaces(bbox);
         std::vector<bool> res;
-        std::vector<Face*> res_temp;
-        res_temp.emplace_back(result[1]);
-        result = res_temp;
         for (size_t i = 0; i < result.size(); i++)
         {
             res.emplace_back(IntersectionTool::IsIntersect(bbox, result[i]));
@@ -111,7 +108,7 @@ int main()
             myfile << ids+1 << " " << ids+2 << " " << ids+3 << "\n";
             ids += 3;
         }
-
+        result.clear();
         myfile << "ZONE T = \"bbox\", N = " << (result.size() + 1) * 8 << ", E = " << 6*(result.size() + 1)<< ", DATAPACKING=POINT, ZONETYPE=FEQUADRILATERAL\n";
         for (auto it : result)
         {

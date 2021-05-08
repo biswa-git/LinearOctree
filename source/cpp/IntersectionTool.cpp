@@ -24,19 +24,6 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
 
     auto triangle_vector = triangle->GetVerticesVector();
     auto AABB_vector = box.GetVerticesVector();
-
-    auto AABB_center = (box.GetMin() + box.GetMax()) / 2.0;
-
-    for (auto& it : triangle_vector)
-    {
-        it = it - AABB_center;
-    }
-
-    for (auto& it : AABB_vector)
-    {
-        it = it - AABB_center;
-    }
-
     for (int i = 0; i < 3; i++)
     {
         IntersectionTool::Project(triangle_vector, boxNormals[i], triangle_min, triangle_max);
@@ -67,7 +54,7 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
             Vector axis = triangleEdges[i]^boxNormals[j];
             Project(AABB_vector, axis, box_min, box_max);
             Project(triangle_vector, axis, triangle_min, triangle_max);
-            if (box_max <= triangle_min || box_min >= triangle_max)
+            if (box_max < triangle_min || box_min > triangle_max)
                 return false; // No intersection possible
         }
 

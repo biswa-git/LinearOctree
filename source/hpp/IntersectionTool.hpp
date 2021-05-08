@@ -10,5 +10,5 @@ public:
 
 	static bool IsIntersect(AABB&, Face*);
 private:
-	static void IntersectionTool::Project(std::vector<Vector>, Vector, double&, double&);
+	static void Project(std::vector<Vector>, Vector, double&, double&);
 };
