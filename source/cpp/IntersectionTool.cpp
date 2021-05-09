@@ -14,19 +14,18 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
     double triangle_min, triangle_max;
     double box_min, box_max;
 
-    // Test the box normals (x-, y- and z-axes)
-    std::vector<Vector> boxNormals
+    std::vector<Vector> box_normals
     {
         Vector(1, 0, 0),
         Vector(0, 1, 0), 
         Vector(0, 0, 1)
     };
 
-    auto triangle_vector = triangle->GetVerticesVector();
-    auto AABB_vector = box.GetVerticesVector();
+    auto triangle_vertex_vector = triangle->GetVerticesVector();
+    auto AABB_vertex_vector = box.GetVerticesVector();
     for (int i = 0; i < 3; i++)
     {
-        IntersectionTool::Project(triangle_vector, boxNormals[i], triangle_min, triangle_max);
+        IntersectionTool::Project(triangle_vertex_vector, box_normals[i], triangle_min, triangle_max);
         if (triangle_max < box.GetMin()[i] || triangle_min > box.GetMax()[i])
         {
             return false; // No intersection possible.
@@ -34,13 +33,14 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
     }
 
     // Test the triangle normal
-    double triangleOffset = triangle->GetNormalVector().Unit() * triangle_vector[0];
-    Project(AABB_vector, triangle->GetNormalVector().Unit(), box_min, box_max);
-    if (box_max < triangleOffset || box_min > triangleOffset)
+    double triangle_offset = triangle->GetNormalVector().Unit() * triangle_vertex_vector[0];
+    Project(AABB_vertex_vector, triangle->GetNormalVector().Unit(), box_min, box_max);
+    if (box_max < triangle_offset || box_min > triangle_offset)
+    {
         return false; // No intersection possible.
+    }
 
-    // Test the nine edge cross-products
-    std::vector<Vector> triangleEdges
+    std::vector<Vector> triangle_edges
     {
         triangle->GetHalfEdge()[0]->GetEdgeVector(),
         triangle->GetHalfEdge()[1]->GetEdgeVector(),
@@ -50,16 +50,24 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
         {
-            // The box normals are the same as it's edge tangents
-            Vector axis = triangleEdges[i]^boxNormals[j];
-            Project(AABB_vector, axis, box_min, box_max);
-            Project(triangle_vector, axis, triangle_min, triangle_max);
+            Vector axis = triangle_edges[i]^box_normals[j];
+            Project(AABB_vertex_vector, axis, box_min, box_max);
+            Project(triangle_vertex_vector, axis, triangle_min, triangle_max);
             if (box_max < triangle_min || box_min > triangle_max)
+            {
                 return false; // No intersection possible
+            }
         }
 
     // No separating axis found.
     return true;
+}
+bool IntersectionTool::IsIntersect(AABB& box, std::vector<Face*> faces)
+{
+    for (auto face : faces)
+    {
+        if(IsIntersect(box, face)) return true;
+    }
 }
 
 void IntersectionTool::Project(std::vector<Vector> points, Vector axis, double& min, double& max)

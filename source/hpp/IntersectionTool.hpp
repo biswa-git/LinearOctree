@@ -9,6 +9,7 @@ public:
 	~IntersectionTool();
 
 	static bool IsIntersect(AABB&, Face*);
+	static bool IsIntersect(AABB&, std::vector<Face*>);
 private:
 	static void Project(std::vector<Vector>, Vector, double&, double&);
 };

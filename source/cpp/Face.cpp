@@ -65,9 +65,8 @@ TriFace::TriFace(Vertex* a, Vertex* b, Vertex* c, const Vector& normal, const si
 	for (size_t i = 0; i < 3; i++)
 	{
 		auto edgeList = tempVertexArray[i]->GetAssociatedEdge();
-		for (auto it = edgeList.begin(); it != edgeList.end(); it++)
+		for (auto associatedEdge : edgeList)
 		{
-			auto associatedEdge = *it;
 			if (associatedEdge->GetEnd() == tempVertexArray[(i + 1) % 3] || associatedEdge->GetStart() == tempVertexArray[(i + 1) % 3])
 			{
 				triEdge[i] = associatedEdge;
@@ -139,9 +138,9 @@ std::vector<HalfEdge*>& TriFace::GetHalfEdge()
 std::vector<Vector> TriFace::GetVerticesVector()
 {
 	std::vector<Vector> result;
-	for (auto it = m_half_edge.begin(); it != m_half_edge.end(); it++)
+	for (auto it : m_half_edge)
 	{
-		result.emplace_back((*it)->GetStart()->GetPositionVector());
+		result.emplace_back(it->GetStart()->GetPositionVector());
 	}
 	return result;
 }

@@ -13,16 +13,16 @@ Geometry::~Geometry()
     /*
     if (!m_face_list.empty())
     {
-        for (auto it = m_face_list.begin(); it != m_face_list.end(); ++it)
+        for (auto it : m_face_list)
         {
             FREE_OBJ_MACRO(*it);
         }
     }
     if (!m_vertex_list.empty())
     {
-        for (auto it = m_vertex_list.begin(); it != m_vertex_list.end(); ++it)
+        for (auto it : m_vertex_list)
         {
-            FREE_OBJ_MACRO(*it);
+            FREE_OBJ_MACRO(it);
         }
     }
     */
@@ -104,15 +104,15 @@ GeometryResult Geometry::Write(const std::string& file_location, const std::stri
     myfile << "VARIABLES = \"X\", \"Y\", \"Z\"\n";
     myfile << "ZONE T = \"Rampant\", N = " << m_vertex_list.size() << ", E = " << m_face_list.size() << ", DATAPACKING=POINT, ZONETYPE=FETRIANGLE\n";
 
-    for (auto it = m_vertex_list.begin(); it != m_vertex_list.end(); it++)
+    for (auto it : m_vertex_list)
     {
-        auto coord = (*it)->GetPositionVector();
+        auto coord = it->GetPositionVector();
         myfile << coord.GetDx() << " " << coord.GetDy() << " " << coord.GetDz() << "\n";
     }
 
-    for (auto it = m_face_list.begin(); it != m_face_list.end(); it++)
+    for (auto it : m_face_list)
     {
-        myfile << (*it)->GetHalfEdge()[0]->GetStart()->GetId() << " " << (*it)->GetHalfEdge()[1]->GetStart()->GetId() << " " << (*it)->GetHalfEdge()[2]->GetStart()->GetId() << "\n";
+        myfile << it->GetHalfEdge()[0]->GetStart()->GetId() << " " << it->GetHalfEdge()[1]->GetStart()->GetId() << " " << it->GetHalfEdge()[2]->GetStart()->GetId() << "\n";
     }
     
     myfile.close();
