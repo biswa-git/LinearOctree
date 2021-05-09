@@ -22,9 +22,9 @@ void Hasher::SetCoord(const coord_int& x_coord, const coord_int& y_coord, const 
 
 hash_int Hasher::Get()
 {
-    auto x_b = DecimalToBinary<g_MaxLevel>(m_octree_coord[0]);
-    auto y_b = DecimalToBinary<g_MaxLevel>(m_octree_coord[1]);
-    auto z_b = DecimalToBinary<g_MaxLevel>(m_octree_coord[2]);
+    auto x_b = DecimalToBinary<g_MaxLevel_modified>(m_octree_coord[0]);
+    auto y_b = DecimalToBinary<g_MaxLevel_modified>(m_octree_coord[1]);
+    auto z_b = DecimalToBinary<g_MaxLevel_modified>(m_octree_coord[2]);
 
     std::bitset<g_BitsetHashSize> result_bitset(m_level);
     //INTERLACING

@@ -58,7 +58,7 @@ GeometryResult Geometry::Read(const std::string& file_name)
             }
 
             //CALCULATING AABB
-            //CalculateBoundingBox();
+            CalculateBoundingBox();
 
             result.success = true;
         }
@@ -72,6 +72,11 @@ GeometryResult Geometry::Read(const std::string& file_name)
         result.error = GEOMETRY_ALREADY_READ;
     }
     return result;
+}
+
+AABB Geometry::GetAABB()
+{
+    return m_bounding_box;
 }
 
 GeometryResult Geometry::CalculateBoundingBox()

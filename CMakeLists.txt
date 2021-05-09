@@ -23,6 +23,7 @@ source/cpp/Face.cpp
 source/cpp/AABB.cpp
 source/cpp/AABBTree.cpp
 source/cpp/IntersectionTool.cpp
+source/cpp/Mesh.cpp
 )
 
 install(TARGETS AMR DESTINATION ${CMAKE_SOURCE_DIR}/exe)

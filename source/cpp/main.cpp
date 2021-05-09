@@ -6,6 +6,7 @@
 #include<AABBTree.hpp>
 #include<IntersectionTool.hpp>
 #include<chrono>
+#include<Mesh.hpp>
 
 
 void printbbox(std::ofstream& file, AABB& bbox)
@@ -25,26 +26,31 @@ void printbbox(std::ofstream& file, AABB& bbox)
 
 int main()
 {
-    auto v = NULL_VECTOR;
-    HasherParams params;
-    Hasher hash(params);
-    //hash_int in = 786;
-    //auto bin = hash.DecimalToBinary(in);
-    //auto dec = hash.BinaryToDecimal(bin);
-
-    hash.SetLevel(0);
-    /*
-    hash.SetCoord(4,2,0);
-    auto ans = hash.Get();
-    std::cout << ans << "\n";
-    */
-
     std::string file_location = "C:/Users/MegaMind/Downloads/model/";
-    std::string file_name = "CERF_Free_Triangulate.stl";
+    std::string file_name = "Ardita.stl";
 
     Geometry geometry;
     geometry.Read(file_location + file_name);
-    geometry.Write("E:/LinearOctree/output", "CERF_Free_Triangulate");
+
+    Mesh mesh(&geometry);
+    mesh.Initialize();
+    mesh.Refine(5);
+    auto& clist = mesh.GetOctantList();
+
+    std::ofstream myfile;
+    myfile.open("test.dat");
+    myfile << "TITLE = \"Example: Simple 3D Line\"" << std::endl;
+    myfile << "VARIABLES = \"X\", \"Y\", \"Z\", \"T\"" << std::endl;
+    myfile << "ZONE I = " << clist.size() << ", J = 1, K = 1, DATAPACKING = POINT" << std::endl;
+
+    int num = 0;
+    for (auto& it : clist)
+    {
+        myfile << it.x[0] << " " << it.x[1] << " " << it.x[2] << " " << ++num << "\n";
+    }
+
+    myfile.close();
+    //geometry.Write("E:/LinearOctree/output", "CERF_Free_Triangulate");
 
     /*
     std::ofstream myfile;
@@ -56,9 +62,10 @@ int main()
     int num = 0;
     for (auto it = clist.begin(); it != clist.end(); ++it)
     {
-        myfile << (*it).c[0] << " " << (*it).c[1] << " " << (*it).c[2] << " " << ++num << "\n";
+        myfile << it.x[0] << " " << it.x[1] << " " << it.x[2] << " " << ++num << "\n";
     }
     */
+    /*
     std::chrono::high_resolution_clock clock;
     std::cout << "start\n";
     auto start = clock.now();
@@ -109,13 +116,21 @@ int main()
             ids += 3;
         }
         result.clear();
-        myfile << "ZONE T = \"bbox\", N = " << (result.size() + 1) * 8 << ", E = " << 6*(result.size() + 1)<< ", DATAPACKING=POINT, ZONETYPE=FEQUADRILATERAL\n";
+
+        */
+
+    auto result = clist;
+    auto file = file_location + "/" + "Ardita" + ".dat";
+    myfile.open(file);
+    myfile << "TITLE = \"title\"\n";
+    myfile << "VARIABLES = \"X\", \"Y\", \"Z\"\n";
+        myfile << "ZONE T = \"bbox\", N = " << (result.size()) * 8 << ", E = " << 6*(result.size())<< ", DATAPACKING=POINT, ZONETYPE=FEQUADRILATERAL\n";
         for (auto it : result)
         {
-            printbbox(myfile, it->GetAABB());
+            printbbox(myfile, mesh.GetAABB(it));
         }
-        printbbox(myfile, bbox);
-        ids = 0;
+        //printbbox(myfile, bbox);
+        auto ids = 0;
         for (auto it : result)
         {
             myfile << ids + 1 << " " << ids + 2 << " " << ids + 3 << " " << ids + 4 << "\n";
@@ -127,15 +142,7 @@ int main()
 
             ids += 8;
         }
-
-        myfile << ids + 1 << " " << ids + 2 << " " << ids + 3 << " " << ids + 4 << "\n";
-        myfile << ids + 5 << " " << ids + 6 << " " << ids + 7 << " " << ids + 8 << "\n";
-        myfile << ids + 4 << " " << ids + 1 << " " << ids + 5 << " " << ids + 8 << "\n";
-        myfile << ids + 1 << " " << ids + 2 << " " << ids + 6 << " " << ids + 5 << "\n";
-        myfile << ids + 3 << " " << ids + 2 << " " << ids + 6 << " " << ids + 7 << "\n";
-        myfile << ids + 4 << " " << ids + 3 << " " << ids + 7 << " " << ids + 8 << "\n"; 
-        
-        
+               
         myfile.close();
 
 
@@ -146,7 +153,7 @@ int main()
 
 
 
-
+/*/
 
     //}
     end = clock.now();
@@ -171,6 +178,8 @@ int main()
 
     end = clock.now();
     std::cout << "time taken loop: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
-    
+    */
+
+
     return 0;
 }

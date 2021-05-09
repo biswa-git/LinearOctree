@@ -43,11 +43,11 @@ public:
     GeometryResult Read(const std::string& file_name);
     GeometryResult Write(const std::string& file_location, const std::string& file_name);
     std::vector<Face*>& GetFaceList();
+    AABB GetAABB();
 private:
     bool m_is_read;
     bool m_is_bounding_box;
     AABB m_bounding_box;
-
 
     std::vector<Vertex*> m_vertex_list;
     std::vector<Face*> m_face_list;

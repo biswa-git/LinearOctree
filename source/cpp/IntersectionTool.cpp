@@ -62,12 +62,14 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
     // No separating axis found.
     return true;
 }
+
 bool IntersectionTool::IsIntersect(AABB& box, std::vector<Face*> faces)
 {
     for (auto face : faces)
     {
         if(IsIntersect(box, face)) return true;
     }
+    return false;
 }
 
 void IntersectionTool::Project(std::vector<Vector> points, Vector axis, double& min, double& max)
