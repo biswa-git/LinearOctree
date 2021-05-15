@@ -3,7 +3,7 @@
 #include<Geometry.hpp>
 #include<Constants.hpp>
 #include<list>
-//dummy
+
 class Octant
 {
 	//friend class Mesh;

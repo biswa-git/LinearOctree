@@ -4,7 +4,6 @@
 #include<IntersectionTool.hpp>
 #include<AABBTree.hpp>
 
-//dummy
 Octant::Octant(const size_t& x, const size_t& y, const size_t& z, const int& level)
 {
     this->x[0] = x;
