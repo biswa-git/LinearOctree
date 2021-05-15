@@ -9,7 +9,7 @@ IntersectionTool::~IntersectionTool()
 {
 }
 
-bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
+bool IntersectionTool::IsIntersect(const AABB& box, Face* triangle)
 {
     double triangle_min, triangle_max;
     double box_min, box_max;
@@ -23,6 +23,8 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
 
     auto triangle_vertex_vector = triangle->GetVerticesVector();
     auto AABB_vertex_vector = box.GetVerticesVector();
+
+    /*
     for (int i = 0; i < 3; i++)
     {
         IntersectionTool::Project(triangle_vertex_vector, box_normals[i], triangle_min, triangle_max);
@@ -31,6 +33,7 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
             return false; // No intersection possible.
         }
     }
+    */
 
     // Test the triangle normal
     double triangle_offset = triangle->GetNormalVector().Unit() * triangle_vertex_vector[0];
@@ -63,7 +66,7 @@ bool IntersectionTool::IsIntersect(AABB& box, Face* triangle)
     return true;
 }
 
-bool IntersectionTool::IsIntersect(AABB& box, std::vector<Face*> faces)
+bool IntersectionTool::IsIntersect(const AABB& box, const std::vector<Face*>& faces)
 {
     for (auto face : faces)
     {

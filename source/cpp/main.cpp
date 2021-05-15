@@ -26,8 +26,9 @@ void printbbox(std::ofstream& file, AABB& bbox)
 
 int main()
 {
+    std::string name ="CERF_Free_Triangulate";
     std::string file_location = "C:/Users/MegaMind/Downloads/model/";
-    std::string file_name = "Ardita.stl";
+    std::string file_name = name + ".stl";
 
     Geometry geometry;
     geometry.Read(file_location + file_name);
@@ -36,7 +37,20 @@ int main()
     mesh.Initialize();
     mesh.Refine(5);
     auto& clist = mesh.GetOctantList();
+    std::list<Octant> interface;
 
+    AABBTree aabb_tree(geometry.GetFaceList());
+    std::cout << "step 1" << std::endl;
+    for (auto c : clist)
+    {
+        auto& octant_aabb = mesh.GetAABB(c);
+        if (c.level == 5 && IntersectionTool::IsIntersect(octant_aabb, aabb_tree.GetFaces(octant_aabb)))
+        {
+            interface.push_back(c);
+        }
+    }
+    clist = interface;
+    std::cout << "step 2" << std::endl;
     std::ofstream myfile;
     myfile.open("test.dat");
     myfile << "TITLE = \"Example: Simple 3D Line\"" << std::endl;
@@ -120,7 +134,7 @@ int main()
         */
 
     auto result = clist;
-    auto file = file_location + "/" + "Ardita" + ".dat";
+    auto file = file_location + "/" + name + ".dat";
     myfile.open(file);
     myfile << "TITLE = \"title\"\n";
     myfile << "VARIABLES = \"X\", \"Y\", \"Z\"\n";
