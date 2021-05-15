@@ -8,7 +8,6 @@
 #include<chrono>
 #include<Mesh.hpp>
 
-
 void printbbox(std::ofstream& file, AABB& bbox)
 {
     auto min = bbox.GetMin();
