@@ -26,7 +26,7 @@ void printbbox(std::ofstream& file, AABB& bbox)
 int main()
 {
     std::string name ="CERF_Free_Triangulate";
-    std::string file_location = "C:/Users/MegaMind/Downloads/model/";
+    std::string file_location = "C:/Users/bghosh/Downloads/model/";
     std::string file_name = name + ".stl";
 
     Geometry geometry;

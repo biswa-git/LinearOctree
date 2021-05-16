@@ -8,7 +8,7 @@ class Octant
 {
 	//friend class Mesh;
 public:
-	Octant(const size_t&, const size_t&, const size_t&, const int&);
+	Octant(const coord_int&, const coord_int&, const coord_int&, const int&);
 	bool operator < (const Octant&) const;
 
 //private:

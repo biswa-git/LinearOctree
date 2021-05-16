@@ -13,33 +13,33 @@ Vector::~Vector()
 {
 }
 
-Vector Vector::operator+(const Vector& v)
+Vector Vector::operator+(const Vector& v) const
 {
 	return Vector(this->m_c[0] + v.m_c[0], this->m_c[1] + v.m_c[1], this->m_c[2] + v.m_c[2]);
 }
 
-Vector Vector::operator-(const Vector& v)
+Vector Vector::operator-(const Vector& v) const
 {
 	return Vector(this->m_c[0] - v.m_c[0], this->m_c[1] - v.m_c[1], this->m_c[2] - v.m_c[2]);
 }
 
-Vector Vector::operator*(const double& s)
+Vector Vector::operator*(const double& s) const
 {
 	return Vector(this->m_c[0] * s, this->m_c[1] * s, this->m_c[2] * s);
 }
 
-Vector Vector::operator/(const double& s)
+Vector Vector::operator/(const double& s) const
 {
 	return Vector(this->m_c[0] / s, this->m_c[1] / s, this->m_c[2] / s);
 }
 
-double Vector::operator*(const Vector& v)
+double Vector::operator*(const Vector& v) const
 {
 	return (this->m_c[0] * v.m_c[0] + this->m_c[1] * v.m_c[1] + this->m_c[2] * v.m_c[2]);
 }
 
 //3d implementation needed
-Vector Vector::operator^(const Vector& v)
+Vector Vector::operator^(const Vector& v) const
 {
 	return Vector(
 		this->m_c[1] * v.m_c[2] - this->m_c[2] * v.m_c[1],
@@ -72,23 +72,12 @@ void Vector::SetDz(const double& z)
     m_c[2] = z;
 }
 
-double Vector::GetDx() const
+double Vector::operator [](const int& i) const
 {
-    return m_c[0];
-}
-
-double Vector::GetDy() const
-{
-	return m_c[1];
-}
-
-double Vector::GetDz() const
-{
-	return m_c[2];
-}
-
-double Vector::operator [](const int& i)
-{
+    if (i < 0 && i > 2)
+    {
+        //throw error
+    }
 	return m_c[i];
 }
 void Vector::Reassign(const double& m_dx, const double& m_dy, const double& m_dz)

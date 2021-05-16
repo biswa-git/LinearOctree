@@ -112,7 +112,7 @@ GeometryResult Geometry::Write(const std::string& file_location, const std::stri
     for (auto it : m_vertex_list)
     {
         auto coord = it->GetPositionVector();
-        myfile << coord.GetDx() << " " << coord.GetDy() << " " << coord.GetDz() << "\n";
+        myfile << coord[0] << " " << coord[1] << " " << coord[2] << "\n";
     }
 
     for (auto it : m_face_list)

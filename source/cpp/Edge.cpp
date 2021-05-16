@@ -61,9 +61,9 @@ Vector Edge::DistanceVector(Vertex* start, Vertex* end)
     auto start_vector = start->GetPositionVector();
     auto end_vector = end->GetPositionVector();
     
-    auto dx = end_vector.GetDx() - start_vector.GetDx();
-	auto dy = end_vector.GetDy() - start_vector.GetDy();
-	auto dz = end_vector.GetDz() - start_vector.GetDz();
+    auto dx = end_vector[0] - start_vector[0];
+	auto dy = end_vector[1] - start_vector[1];
+	auto dz = end_vector[2] - start_vector[2];
 
 	return Vector(dx, dy, dz);
 }

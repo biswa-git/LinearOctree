@@ -11,9 +11,6 @@ IntersectionTool::~IntersectionTool()
 
 bool IntersectionTool::IsIntersect(const AABB& box, Face* triangle)
 {
-    double triangle_min, triangle_max;
-    double box_min, box_max;
-
     std::vector<Vector> box_normals
     {
         Vector(1, 0, 0),
@@ -36,9 +33,11 @@ bool IntersectionTool::IsIntersect(const AABB& box, Face* triangle)
     */
 
     // Test the triangle normal
+    ProjectResults box_bound;
+    ProjectResults triangle_bound;
     double triangle_offset = triangle->GetNormalVector().Unit() * triangle_vertex_vector[0];
-    Project(AABB_vertex_vector, triangle->GetNormalVector().Unit(), box_min, box_max);
-    if (box_max < triangle_offset || box_min > triangle_offset)
+    box_bound = Project(AABB_vertex_vector, triangle->GetNormalVector().Unit());
+    if (box_bound.max < triangle_offset || box_bound.min > triangle_offset)
     {
         return false; // No intersection possible.
     }
@@ -54,9 +53,9 @@ bool IntersectionTool::IsIntersect(const AABB& box, Face* triangle)
         for (int j = 0; j < 3; j++)
         {
             Vector axis = triangle_edges[i]^box_normals[j];
-            Project(AABB_vertex_vector, axis, box_min, box_max);
-            Project(triangle_vertex_vector, axis, triangle_min, triangle_max);
-            if (box_max < triangle_min || box_min > triangle_max)
+            box_bound = Project(AABB_vertex_vector, axis);
+            triangle_bound = Project(triangle_vertex_vector, axis);
+            if (box_bound.max < triangle_bound.min || box_bound.min > triangle_bound.max)
             {
                 return false; // No intersection possible
             }
@@ -75,15 +74,22 @@ bool IntersectionTool::IsIntersect(const AABB& box, const std::vector<Face*>& fa
     return false;
 }
 
-void IntersectionTool::Project(std::vector<Vector> points, Vector axis, double& min, double& max)
+ProjectResults IntersectionTool::Project(const std::vector<Vector>& points, const Vector& axis)
 {
-    min = std::numeric_limits<double>::infinity();
-    max = -std::numeric_limits<double>::infinity();
+    ProjectResults result;
 
     for (auto p : points)
     {
-        auto val = axis * p;
-        if (val < min) min = val;
-        if (val > max) max = val;
+        auto value = axis * p;
+        if (value < result.min)
+        {
+            result.min = value;
+        }
+        if (value > result.max)
+        {
+            result.max = value;
+        }
     }
+
+    return result;
 }

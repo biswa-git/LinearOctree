@@ -52,9 +52,9 @@ std::vector<Vector> AABB::GetVerticesVector() const
 
 bool AABB::IsIntersect(const AABB& bb_first, const AABB& bb_second)
 {
-    return (bb_first.m_min.GetDx() <= bb_second.m_max.GetDx() && bb_first.m_max.GetDx() >= bb_second.m_min.GetDx()) &&
-           (bb_first.m_min.GetDy() <= bb_second.m_max.GetDy() && bb_first.m_max.GetDy() >= bb_second.m_min.GetDy()) &&
-           (bb_first.m_min.GetDz() <= bb_second.m_max.GetDz() && bb_first.m_max.GetDz() >= bb_second.m_min.GetDz());
+    return (bb_first.m_min[0] <= bb_second.m_max[0] && bb_first.m_max[0] >= bb_second.m_min[0]) &&
+           (bb_first.m_min[1] <= bb_second.m_max[1] && bb_first.m_max[1] >= bb_second.m_min[1]) &&
+           (bb_first.m_min[2] <= bb_second.m_max[2] && bb_first.m_max[2] >= bb_second.m_min[2]);
 }
 
 AABB AABB::Union(const AABB& box_first, const AABB& box_second)
@@ -65,14 +65,14 @@ AABB AABB::Union(const AABB& box_first, const AABB& box_second)
     auto box_second_max = box_second.GetMax();
     
     Vector min(
-        std::min(box_first_min.GetDx(), box_second_min.GetDx()),
-        std::min(box_first_min.GetDy(), box_second_min.GetDy()),
-        std::min(box_first_min.GetDz(), box_second_min.GetDz())
+        std::min(box_first_min[0], box_second_min[0]),
+        std::min(box_first_min[1], box_second_min[1]),
+        std::min(box_first_min[2], box_second_min[2])
     );
     Vector max(
-        std::max(box_first_max.GetDx(), box_second_max.GetDx()),
-        std::max(box_first_max.GetDy(), box_second_max.GetDy()),
-        std::max(box_first_max.GetDz(), box_second_max.GetDz())
+        std::max(box_first_max[0], box_second_max[0]),
+        std::max(box_first_max[1], box_second_max[1]),
+        std::max(box_first_max[2], box_second_max[2])
     );
 
     return AABB(min, max);

@@ -158,34 +158,34 @@ AABB TriFace::GetAABB()
     {
         vertex = (*it)->GetStart();
         coord = vertex->GetPositionVector();
-        if (coord.GetDx() < min_vector.GetDx())
+        if (coord[0] < min_vector[0])
         {
-            min_vector.SetDx(coord.GetDx());
+            min_vector.SetDx(coord[0]);
         }
 
-        if (coord.GetDy() < min_vector.GetDy())
+        if (coord[1] < min_vector[1])
         {
-            min_vector.SetDy(coord.GetDy());
+            min_vector.SetDy(coord[1]);
         }
 
-        if (coord.GetDz() < min_vector.GetDz())
+        if (coord[2] < min_vector[2])
         {
-            min_vector.SetDz(coord.GetDz());
+            min_vector.SetDz(coord[2]);
         }
 
-        if (coord.GetDx() > max_vector.GetDx())
+        if (coord[0] > max_vector[0])
         {
-            max_vector.SetDx(coord.GetDx());
+            max_vector.SetDx(coord[0]);
         }
 
-        if (coord.GetDy() > max_vector.GetDy())
+        if (coord[1] > max_vector[1])
         {
-            max_vector.SetDy(coord.GetDy());
+            max_vector.SetDy(coord[1]);
         }
 
-        if (coord.GetDz() > max_vector.GetDz())
+        if (coord[2] > max_vector[2])
         {
-            max_vector.SetDz(coord.GetDz());
+            max_vector.SetDz(coord[2]);
         }
     }
 

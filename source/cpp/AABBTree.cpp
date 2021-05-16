@@ -86,9 +86,9 @@ ConstructAABBTreeResult AABBTree::Construct(const std::vector<Face*>& face_vec)
             {
                 // BRANCHING AABB TREE
                 auto dir = level % 3;
-                if (dir == 0) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid().GetDx() > b->GetCentroid().GetDx(); });
-                if (dir == 1) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid().GetDy() > b->GetCentroid().GetDy(); });
-                if (dir == 2) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid().GetDz() > b->GetCentroid().GetDz(); });
+                if (dir == 0) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid()[0] > b->GetCentroid()[0]; });
+                if (dir == 1) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid()[1] > b->GetCentroid()[1]; });
+                if (dir == 2) std::sort(faces.begin(), faces.end(), [](Face* a, Face* b) { return a->GetCentroid()[2] > b->GetCentroid()[2]; });
 
                 std::vector<Face*> left;
                 std::vector<Face*> right;

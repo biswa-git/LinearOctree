@@ -4,7 +4,7 @@
 #include<IntersectionTool.hpp>
 #include<AABBTree.hpp>
 
-Octant::Octant(const size_t& x, const size_t& y, const size_t& z, const int& level)
+Octant::Octant(const coord_int& x, const coord_int& y, const coord_int& z, const int& level)
 {
     this->x[0] = x;
     this->x[1] = y;
@@ -85,14 +85,14 @@ void Mesh::Initialize()
     Hasher hash(params);
 
     std::set<Octant> octants_set;
-
-    for (size_t i = 0; i < m_cell_num[0]; i++)
+    auto octant_coord_size = static_cast<coord_int>(pow(2, g_MaxLevel));
+    for (coord_int i = 0; i < m_cell_num[0]; i++)
     {
-        for (size_t j = 0; j < m_cell_num[1]; j++)
+        for (coord_int j = 0; j < m_cell_num[1]; j++)
         {
-            for (size_t k = 0; k < m_cell_num[2]; k++)
+            for (coord_int k = 0; k < m_cell_num[2]; k++)
             {
-                Octant octant(i * pow(2, g_MaxLevel), j * pow(2, g_MaxLevel), k * pow(2, g_MaxLevel), 0);
+                Octant octant(i * octant_coord_size, j * octant_coord_size, k * octant_coord_size, 0);
                 octants_set.emplace(octant);
             }
         }
@@ -143,7 +143,7 @@ void Mesh::Refine(const int& level)
                 auto intsct = IntersectionTool::IsIntersect(octant_aabb, aabb_tree.GetFaces(octant_aabb));
                 if (intsct)
                 {
-                    auto length = pow(2, g_MaxLevel - current_level - 1);
+                    coord_int length = static_cast<coord_int>(pow(2, g_MaxLevel - current_level - 1));
                     Octant oc1(octant.x[0], octant.x[1], octant.x[2], current_level + 1);
                     Octant oc2(octant.x[0], octant.x[1], octant.x[2] + length, current_level + 1);
                     Octant oc3(octant.x[0], octant.x[1] + length, octant.x[2], current_level + 1);

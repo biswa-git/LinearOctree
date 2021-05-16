@@ -37,5 +37,5 @@ std::set<Edge*>& Vertex::GetAssociatedEdge()
 
 void Vertex::Print() const
 {
-	std::cout << "id:" << m_id << " [" << m_coord.GetDx() << "," << m_coord.GetDy() << "," << m_coord.GetDz() << "]" << std::endl;
+	std::cout << "id:" << m_id << " [" << m_coord[0] << "," << m_coord[1] << "," << m_coord[2] << "]" << std::endl;
 }
